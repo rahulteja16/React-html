@@ -1,11 +1,13 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const paths = {
     DIST: path.resolve(__dirname, 'dist'),
     SRC: path.resolve(__dirname, 'src'),
-    JS: path.resolve(__dirname, 'src/js')
+    JS: path.resolve(__dirname, 'src/js'),
+    CSS: path.resolve(__dirname, 'src/css')
 }
 
 module.exports = {
@@ -19,6 +21,7 @@ module.exports = {
             template: path.join(paths.SRC, 'index.html'),
         }),
         new ExtractTextPlugin('style.bundle.css'),
+        new webpack.HotModuleReplacementPlugin()
     ],
     module: {
         rules:[
@@ -46,8 +49,14 @@ module.exports = {
 
     resolve: {
         extensions: ['.js', '.jsx'],
+        alias: {
+            'styles': paths.CSS
+        }
     },
-    // devServer: {
-    //     contentBase: paths.SRC,
-    // },
+    devServer: {
+        contentBase: paths.SRC,
+        hot: true,
+        inline: true,    
+        historyApiFallback: true
+    },
 }
